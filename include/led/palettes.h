@@ -3,12 +3,9 @@
 
 #include "app_defs.h"
 
-#define palette_count 6
-#define palette_custom 3
-#define palette_novation 3
+#define palette_count 1
 
-u8 palette[palette_custom][3][128];
-//const u8 palette_preset[palette_count - palette_custom][3][128];
+const u8 palette[palette_count][3][128];
 
 u8 palette_value(u8 i, u8 v, u8 c);
 

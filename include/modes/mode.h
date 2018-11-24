@@ -6,51 +6,19 @@
 #include "led/led.h"
 #include "flash/flash.h"
 
-#define mode_performance 0
-#include "modes/normal/performance.h"
-
-#define mode_ableton 1
-#include "modes/normal/ableton.h"
-
-#define mode_note 2
-#include "modes/normal/note.h"
-
-#define mode_drum 3
-#include "modes/normal/drum.h"
-
-#define mode_fader 4
-#include "modes/normal/fader.h"
-
-#define mode_programmer 5
-#include "modes/normal/programmer.h"
-
-#define mode_piano 6
-#include "modes/normal/piano.h"
-
-#define mode_text 7
-#include "modes/normal/text.h"
-
-#define mode_normal 8
-
-#define mode_scale_setup 8
-#include "modes/special/scale.h"
-
-#define mode_editor 9
-#include "modes/special/editor.h"
-
-#define mode_setup 10
-#include "modes/special/setup.h"
-
-#define mode_boot 11
+#define mode_boot 0
 #include "modes/special/boot.h"
 
-#define mode_puyo 12
-#include "modes/special/puyo.h"
+#define mode_setup 1
+#include "modes/special/setup.h"
 
-void (*const mode_init[13])();
-void (*const mode_timer_event[13])();
-void (*const mode_surface_event[13])(u8 p, u8 v, u8 x, u8 y);
-void (*const mode_midi_event[13])(u8 port, u8 t, u8 ch, u8 p, u8 v);
+#define mode_example 2
+#include "modes/normal/example.h"
+
+void (*const mode_init[3])();
+void (*const mode_timer_event[3])();
+void (*const mode_surface_event[3])(u8 p, u8 v);
+void (*const mode_midi_event[3])(u8 port, u8 t, u8 ch, u8 p, u8 v);
 
 u8 mode, mode_default;
 

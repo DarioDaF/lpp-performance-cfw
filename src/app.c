@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------------*/
-/*  Performance-optimized Launchpad Pro Firmware modification by mat1jaczyyy  */
+/*      Performance-optimized Launchpad Pro Firmware base by mat1jaczyyy      */
 /*----------------------------------------------------------------------------*/
 
 /******************************************************************************
@@ -43,8 +43,6 @@ void app_timer_event() {
 
 	tempo_timer++; tempo_tick();
 
-	if (challenge_do) challenge_timer_event();
-
 	(*mode_timer_event[mode])();
 }
 
@@ -53,12 +51,10 @@ void app_surface_event(u8 t, u8 p, u8 v) {
 		v = (v == 0)? 0 : 127;
 	}
 
-	(*mode_surface_event[mode])(p, v, p / 10, p % 10);
+	(*mode_surface_event[mode])(p, v);
 }
 
 void app_midi_event(u8 port, u8 t, u8 p, u8 v) {
-	u8 ch;
-
 	switch (t) {
 		case 0xFA:
 			tempo_start();
@@ -73,14 +69,7 @@ void app_midi_event(u8 port, u8 t, u8 p, u8 v) {
 			break;
 		
 		default:
-			ch = t % 16;
-			t >>= 4;
-
-			if (mode != mode_ableton && mode_default == mode_ableton) {
-				(*mode_midi_event[mode_default])(port, t, ch, p, v);
-			}
-
-			(*mode_midi_event[mode])(port, t, ch, p, v);
+			(*mode_midi_event[mode])(port, t >> 4, t % 16, p, v);
 			break;
 	}
 }
@@ -94,5 +83,5 @@ void app_sysex_event(u8 port, u8 *d, u16 l) {
 
 void app_init(const u16 *adc_raw) {
 	flash_read();
-	mode_update(mode_boot);
+	mode_update(mode);
 }

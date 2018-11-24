@@ -84,6 +84,6 @@ static const u8 ADC_MAP[PAD_COUNT] =
 	45, 85, 46, 86, 47, 87, 48, 88,
 };
 
-#define modulo(x, y) ((x % y + y) % y) // Negative modulo behavior
+#define modulo(x, y) ((x % y + y) % y) // Negative modulo behavior fix
 
 #endif
