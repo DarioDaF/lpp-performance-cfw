@@ -1,0 +1,62 @@
+#include "modes/mode.h"
+
+/*[[[cog
+
+import json
+
+with open("./include/modes/mode.json", "r") as fp:
+	mode_list = json.load(fp)
+
+mode_array = []
+for block in mode_list:
+	mode_array.extend(block["list"])
+
+]]]*/
+//[[[end]]]
+
+// Arrays of function pointers. Used to programmatically call the correct mode's function
+/*[[[cog
+
+# Function Pointers
+
+def genFuncArray(suffix, ret = "void", name = "mode", params = "", l = mode_array):
+	count = len(l)
+	content = ", ".join(map(lambda mode: mode + suffix, l))
+	return """
+{ret} (*const {name}{suffix}[{count}])({params}) = {{
+	{content}
+}};
+""".format(suffix = suffix, ret = ret, name = name, params = params, content = content, count = count)
+
+cog.out(genFuncArray("_init"))
+cog.out(genFuncArray("_timer_event"))
+cog.out(genFuncArray("_surface_event", params = "u8 p, u8 v, u8 x, u8 y"))
+cog.out(genFuncArray("_midi_event", params = "u8 port, u8 t, u8 ch, u8 p, u8 v"))
+cog.out(genFuncArray("_aftertouch_event", params = "u8 v"))
+cog.out(genFuncArray("_poly_event", params = "u8 p, u8 v"))
+
+]]]*/
+//[[[end]]]
+
+u8 mode = 0;
+u8 mode_default = 0;
+
+void mode_refresh() {
+	clear_led();
+	(*mode_init[mode])();
+}
+
+void mode_update(u8 x) {
+	clear_led();
+	flash_write();
+	
+	mode = x;
+	(*mode_init[mode])();
+}
+
+void mode_default_update(u8 x) {
+	if (mode_default != x) {
+		mode_default = x;
+		mode_update(mode_default);
+	}
+}

@@ -41,7 +41,6 @@ u32 global_timer = 0;
 u32 idle_time = idle_timeout;
 
 void idle_exit() {
-	test();
 	if (mode == mode_idle) mode_update(idle_return);
 	idle_time = global_timer + idle_timeout;
 }

@@ -1,4 +1,4 @@
-#include "modes/special/scale.h"
+#include "modes/special/scale_setup.h"
 
 #define scale_setup_color_enabled_r 20
 #define scale_setup_color_enabled_g 63

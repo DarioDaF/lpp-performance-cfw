@@ -1,0 +1,26 @@
+[
+	{
+		"group": "normal",
+		"list": [
+			"performance",
+			"ableton",
+			"note",
+			"drum",
+			"fader",
+			"programmer",
+			"piano",
+			"text"
+		]
+	},
+	{
+		"group": "special",
+		"list": [
+			"scale_setup",
+			"editor",
+			"setup",
+			"boot",
+			"puyo",
+			"idle"
+		]
+	}
+]
