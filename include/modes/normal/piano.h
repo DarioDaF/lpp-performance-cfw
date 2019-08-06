@@ -11,8 +11,8 @@
 #define mode_piano_g 0
 #define mode_piano_b 63
 
-s8 piano_octave;
-u8 piano_shift;
+extern s8 piano_octave;
+extern u8 piano_shift;
 
 void piano_init();
 void piano_timer_event();

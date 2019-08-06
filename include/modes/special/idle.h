@@ -6,7 +6,7 @@
 
 #define idle_timeout 600000
 
-u8 idle_return;
+extern u8 idle_return;
 
 void idle_init();
 void idle_timer_event();

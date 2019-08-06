@@ -6,7 +6,7 @@
 #include "flash/settings.h"
 #include "led/led.h"
 
-u8 dirty;
+extern u8 dirty;
 
 void flash_read();
 void flash_write();

@@ -3,24 +3,24 @@
 /*----------------------------------------------------------------------------*/
 
 /******************************************************************************
- 
+
   Copyright (c) 2015, Focusrite Audio Engineering Ltd.
   All rights reserved.
- 
+
   Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions are met:
- 
+
  * Redistributions of source code must retain the above copyright notice, this
  list of conditions and the following disclaimer.
- 
+
  * Redistributions in binary form must reproduce the above copyright notice,
  this list of conditions and the following disclaimer in the documentation
  and/or other materials provided with the distribution.
- 
+
  * Neither the name of Focusrite Audio Engineering Ltd., nor the names of its
  contributors may be used to endorse or promote products derived from
  this software without specific prior written permission.
- 
+
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -31,15 +31,17 @@
  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- 
+
  ******************************************************************************/
 
 #include "app.h"
 
+u8 active_port = USBSTANDALONE;
 u32 global_timer = 0;
 u32 idle_time = idle_timeout;
 
 void idle_exit() {
+	test();
 	if (mode == mode_idle) mode_update(idle_return);
 	idle_time = global_timer + idle_timeout;
 }
@@ -82,11 +84,11 @@ void app_midi_event(u8 port, u8 t, u8 p, u8 v) {
 		case 0xF8:
 			tempo_midi();
 			break;
-		
+
 		case 0xFC:
 			tempo_stop();
 			break;
-		
+
 		default:
 			ch = t % 16;
 			t >>= 4;
@@ -107,7 +109,7 @@ void app_aftertouch_event(u8 p, u8 v) {
 
 	if (result != -1 && aftertouch_enabled == 1)
 		(*mode_aftertouch_event[mode])(result);
-	
+
 	if (aftertouch_enabled == 2)
 		(*mode_poly_event[mode])(p, v);
 }

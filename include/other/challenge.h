@@ -5,8 +5,8 @@
 
 #include "sysex/messages.h"
 
-u8 challenge_do;
-u16 challenge_counter;
+extern u8 challenge_do;
+extern u16 challenge_counter;
 
 void challenge_timer_event();
 

@@ -14,6 +14,7 @@ SOURCES += src/modes/normal/performance.c src/modes/normal/ableton.c src/modes/n
 SOURCES += src/modes/special/boot.c src/modes/special/setup.c src/modes/special/editor.c src/modes/special/scale.c src/modes/special/puyo.c src/modes/special/idle.c
 
 SOURCES += src/app.c
+SOURCES += src/test.cpp
 
 INCLUDES += -Iinclude -I
 
@@ -30,14 +31,19 @@ HEXTOSYX = $(BUILDDIR)/hextosyx
 # tools
 HOST_GPP = g++
 CC = arm-none-eabi-gcc
-LD = arm-none-eabi-gcc
+CPP = arm-none-eabi-g++
+#LD = arm-none-eabi-gcc
+LD = arm-none-eabi-g++
 OBJCOPY = arm-none-eabi-objcopy
 
-CFLAGS  = -Os -g -Wall -I.\
+CXFLAGS = -Os -g -Wall -I.\
 -D_STM32F103RBT6_  -D_STM3x_  -D_STM32x_ -mthumb -mcpu=cortex-m3 \
 -fsigned-char  -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER -DHSE_VALUE=6000000UL \
--DCMSIS -DUSE_GLOBAL_CONFIG   -g3 -ffunction-sections -std=c99  -mlittle-endian \
+-DCMSIS -DUSE_GLOBAL_CONFIG   -g3 -ffunction-sections  -mlittle-endian \
 $(INCLUDES) -o
+
+CFLAGS = -std=c99 $(CXFLAGS)
+CPPFLAGS = -std=c++0x $(CXFLAGS)
 
 LDSCRIPT = stm32_flash.ld
 
@@ -66,6 +72,10 @@ DEPENDS := $(OBJECTS:.o=.d)
 $(BUILDDIR)/%.o: %.c
 	mkdir -p $(dir $@)
 	$(CC) -c $(CFLAGS) -MMD -o $@ $<
+
+$(BUILDDIR)/%.o: %.cpp
+	mkdir -p $(dir $@)
+	$(CPP) -c $(CPPFLAGS) -MMD -o $@ $<
 
 clean:
 	rm -rf $(BUILDDIR)

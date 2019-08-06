@@ -5,7 +5,7 @@
 
 #include "modes/mode.h"
 
-u32 tempo_timer;
+extern u32 tempo_timer;
 
 void tempo_start();
 void tempo_midi();
