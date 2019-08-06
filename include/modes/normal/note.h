@@ -14,7 +14,7 @@
 extern const u8 scales[32][13], scale_keys[12];
 
 extern s8 note_octave;
-extern u8 note_shift, scale_enabled, scale_segment, scale_selected, scale_root;
+extern u8 note_shift, scale_enabled, translate_enabled, scale_segment, scale_selected, scale_root;
 
 void note_init();
 void note_timer_event();
