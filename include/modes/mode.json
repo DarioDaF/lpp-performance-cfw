@@ -13,6 +13,12 @@
 		]
 	},
 	{
+		"group": "custom",
+		"list": [
+			"snake"
+		]
+	},
+	{
 		"group": "special",
 		"list": [
 			"scale_setup",

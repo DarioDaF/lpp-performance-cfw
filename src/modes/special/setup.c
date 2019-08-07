@@ -69,7 +69,7 @@ void setup_init() {
 		for (u8 i = 86; i < 89; i++) {
 			rgb_led(i, setup_top_mk2_r >> 2, setup_top_mk2_g >> 2, setup_top_mk2_b >> 2); // MK2 Top Lights
 		}
-	
+
 		if (!top_lights_config) {
 			rgb_led(85, setup_top_pro_r, setup_top_pro_g, setup_top_pro_b); // PRO Top Lights selected
 		} else {
@@ -118,37 +118,41 @@ void setup_init() {
 	rgb_led(72, mode_fader_r >> 2, mode_fader_g >> 2, mode_fader_b >> 2); // Fader mode
 	rgb_led(73, mode_programmer_r >> 2, mode_programmer_g >> 2, mode_programmer_b >> 2); // Programmer mode
 	rgb_led(61, mode_piano_r >> 2, mode_piano_g >> 2, mode_piano_b >> 2); // Piano mode
+	rgb_led(62, mode_snake_r >> 2, mode_snake_g >> 2, mode_snake_b >> 2); // Snake mode
 
 	switch (mode_default) {
-		case 0:
+		case mode_performance:
 			rgb_led(81, mode_performance_r, mode_performance_g, mode_performance_b); // Performance mode selected
 			break;
-		
-		case 1:
+
+		case mode_ableton:
 			rgb_led(82, mode_ableton_r, mode_ableton_g, mode_ableton_b); // Ableton mode selected
 			break;
-		
-		case 2:
+
+		case mode_note:
 			rgb_led(83, mode_note_r, mode_note_g, mode_note_b); // Note mode selected
 			break;
-		
-		case 3:
+
+		case mode_drum:
 			rgb_led(71, mode_drum_r, mode_drum_g, mode_drum_b); // Drum mode selected
 			break;
-		
-		case 4:
+
+		case mode_fader:
 			rgb_led(72, mode_fader_r, mode_fader_g, mode_fader_b); // Fader mode selected
 			break;
-		
-		case 5:
+
+		case mode_programmer:
 			rgb_led(73, mode_programmer_r, mode_programmer_g, mode_programmer_b); // Programmer mode selected
 			break;
 
-		case 6:
+		case mode_piano:
 			rgb_led(61, mode_piano_r, mode_piano_g, mode_piano_b); // Piano mode selected
 			break;
+
+		case mode_snake:
+			rgb_led(62, mode_snake_r, mode_snake_g, mode_snake_b); // Snake mode
 	}
-	
+
 	setup_elapsed = setup_tick;
 	konami_counter = 0;
 }
@@ -157,12 +161,12 @@ void setup_timer_event() {
 	if (++setup_elapsed >= setup_tick) {
 		rgb_led(99, setup_rainbow[setup_mode_counter][0], setup_rainbow[setup_mode_counter][1], setup_rainbow[setup_mode_counter][2]); // Mode LED indicator animation
 		setup_mode_counter++; setup_mode_counter %= setup_rainbow_length;
-		
+
 		if (mode_default == mode_performance && palette_selected < palette_custom) {
 			rgb_led(25, setup_rainbow[setup_editor_counter][0], setup_rainbow[setup_editor_counter][1], setup_rainbow[setup_editor_counter][2]);  // Enter palette editor button animation
 			setup_editor_counter++; setup_editor_counter %= setup_rainbow_length;
 		}
-		
+
 		setup_elapsed = 0;
 	}
 }
@@ -170,16 +174,16 @@ void setup_timer_event() {
 void setup_surface_event(u8 p, u8 v, u8 x, u8 y) {
 	if (v) {
 		setup_jump = 1;
-		
+
 		if (p == 0) { // Enter selected main mode
 			mode_update(mode_default);
 			setup_jump = 0;
-		
+
 		} else if (p == 41) { // Toggle idle animation
 			idle_enabled = (idle_enabled)? 0 : 1;
 			dirty = 1;
 			mode_refresh();
-		
+
 		} else if (p == 21) { // Toggle velocity sensitivity
 			vel_sensitive = (vel_sensitive)? 0 : 1;
 			dirty = 1;
@@ -198,32 +202,36 @@ void setup_surface_event(u8 p, u8 v, u8 x, u8 y) {
 		} else if (81 <= p && p <= 83) { // Switch default mode
 			mode_default = p - 81;
 			mode_refresh();
-		
+
 		} else if (71 <= p && p <= 73) {
 			mode_default = p - 68;
 			mode_refresh();
-		
+
 		} else if (p == 61) {
 			mode_default = mode_piano;
 			mode_refresh();
-		
+
+		} else if (p == 62) {
+			mode_default = mode_snake;
+			mode_refresh();
+
 		} else if (mode_default == mode_performance) {
 			if (1 <= x && x <= 2 && 6 <= y && y <= 8) { // Palette switch
 				palette_selected = (2 - x) * 3 + y - 6;
 				dirty = 1;
 				mode_refresh();
-		
+
 			} else if (p == 25) {
 				if (palette_selected < 3) { // Enter Palette editor mode
 					mode_update(mode_editor);
 					setup_jump = 0;
 				}
-		
+
 			} else if (85 <= p && p <= 88) { // Change Top Lights configuration
 				top_lights_config = p - 85;
 				dirty = 1;
 				mode_refresh();
-			
+
 			} else if (p == 78) { // Change DR or XY layout
 				performance_xy_enabled = (performance_xy_enabled)? 0 : 1;
 				dirty = 1;
@@ -239,7 +247,7 @@ void setup_surface_event(u8 p, u8 v, u8 x, u8 y) {
 		} else {
 			konami_counter = 0;
 		}
-	
+
 	} else { // Note released
 		if (p == 0 && setup_jump) { // Quickly jump back to main mode
 			mode_update(mode_default);
