@@ -68,6 +68,8 @@ $(HEX): $(ELF)
 $(ELF): $(OBJECTS)
 	$(LD) $(LDFLAGS) -o $@ $(OBJECTS) $(LIB)
 
+-include extra.d
+
 DEPENDS := $(OBJECTS:.o=.d)
 
 -include $(DEPENDS)
