@@ -74,6 +74,8 @@ pos_t snake_rng_pos() {
 
 // State
 
+u8 snake_multiple_input;
+
 u16 snake_time;
 
 pos_t snake_food;
@@ -184,10 +186,14 @@ void snake_tick() {
     }
     rgb_led(snake[snake_head], snake_head_r, snake_head_g, snake_head_b);
   #endif
+
+  snake_multiple_input = 0;
 }
 
 void snake_init() {
   snake_seed();
+
+  snake_multiple_input = 0;
 
   #ifndef SNAKE_KEYPAD_OVERLAP
     // Needs only one draw if no overlap
@@ -215,7 +221,8 @@ void snake_surface_event(u8 p, u8 v, u8 x, u8 y) {
   if (p == 0) { // Enter Setup mode
     if (v != 0) mode_update(mode_setup);
 
-  } else if (v > snake_key_force) {
+  } else if (v > snake_key_force && !snake_multiple_input) {
+    snake_multiple_input = 1; // Avoid multiple input in the same frame
     if (p == snake_key_up) {
       snake_dir = SNAKE_DIR_UP;
     } else if (p == snake_key_right) {
