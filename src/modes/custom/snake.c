@@ -98,15 +98,7 @@ u8 snake_issnake(pos_t pos) {
     if (pos == snake[i])
       return 1;
   }
-  return 0;
-}
-
-pos_t snake_rng_pos_nosnake() {
-  pos_t pos;
-  do {
-    pos = snake_rng_pos();
-  } while(snake_issnake(pos));
-  return pos;
+  return pos == snake[snake_head];
 }
 
 void snake_update(pos_t next_pos, u8 grow) {
@@ -184,6 +176,7 @@ void snake_tick() {
     for (u8 i = snake_tail; i != snake_head; i = (i + 1) % SNAKE_MAX_LEN) {
       rgb_led(snake[i], snake_body_r, snake_body_g, snake_body_b);
     }
+    // Fill also head
     rgb_led(snake[snake_head], snake_head_r, snake_head_g, snake_head_b);
   #endif
 
