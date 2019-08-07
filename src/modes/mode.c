@@ -73,7 +73,7 @@ void mode_refresh() {
 void mode_update(u8 x) {
 	clear_led();
 	flash_write();
-	
+
 	mode = x;
 	(*mode_init[mode])();
 }

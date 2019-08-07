@@ -121,7 +121,7 @@ void text_init() {
 	text_counter = 1;
 	text_subcounter = 0;
 	text_done = 0;
-	
+
 	for (u8 i = 0; i < 10; i++) text_frame[i] = 0;
 }
 
@@ -129,61 +129,61 @@ void text_timer_event() {
 	if (++text_elapsed >= text_ticks[text_speed]) { // Next frame
 		if (text_done) {
 			mode_update(mode_default);
-		
+
 		} else {
 			for (u8 i = 0; i < 9; i++) text_frame[i] = text_frame[i + 1]; // Shift all frames left
-			
+
 			u8 b = 0;
-			
+
 			if (text_counter) {
 				b = text_bytes[text_counter];
-				
+
 				while (b < 8) {
 					text_speed = b - 1;
-					
+
 					if (++text_counter == text_bytes[0]) {
 						text_counter = 0;
 						break;
 					}
-					
+
 					b = text_bytes[text_counter];
 				}
 			}
-			
+
 			if (text_counter) {
 				b -= 32;
-				
+
 				if (text_subcounter++ < text_bitmap[b][0]) {
 					text_frame[9] = text_bitmap[b][text_subcounter];
 				} else {
 					text_frame[9] = 0; // Padding between bytes
 				}
-				
+
 				if (text_subcounter == text_bitmap[b][0] + 2) { // Increment counters
 					text_subcounter = 0;
 					if (++text_counter == text_bytes[0]) {
 						text_counter = 0;
 					}
 				}
-			
+
 			} else {
 				text_frame[9] = 0;
-				
+
 				if (!memcmp(&text_frame[0], &text_frame_empty[0], 10)) { // If frames empty
 					hal_send_sysex(text_port, &syx_text_response[0], syx_text_response_length);
-					
+
 					if (text_loop) {
 						text_counter = 1;
 						text_subcounter = 0;
-					
+
 					} else {
 						text_done = 1;
 					}
 				}
 			}
-			
+
 			for (u8 i = 0; i < 10; i++) display_u8(text_frame[i], 1, i, palette_value(palette_novation, text_color, 0), palette_value(palette_novation, text_color, 1), palette_value(palette_novation, text_color, 2)); // Draw text
-			
+
 			text_elapsed = 0;
 		}
 	}

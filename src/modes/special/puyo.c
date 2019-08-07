@@ -97,20 +97,20 @@ u16 puyo_rng() {
 s8 puyo_top_offset(u8 r, u8 f) {
     s8 x = 0;
     s8 y = 0;
-    
+
     switch (r) {
         case 0: // 0 degrees
             x = 1;
             break;
-        
+
         case 1: // 90 degrees
             y = 1;
             break;
-        
+
         case 2: // 180 degrees
             x = -1;
             break;
-        
+
         case 3: // 270 degrees
             y = -1;
             break;
@@ -120,11 +120,11 @@ s8 puyo_top_offset(u8 r, u8 f) {
         case 0: // XY format
             return (x * 10) + y;
             break;
-        
+
         case 1: // X only
             return x;
             break;
-        
+
         case 2: // Y only
             return y;
             break;
@@ -163,7 +163,7 @@ void puyo_draw_board() {
 
 void puyo_draw_current() {
     if (puyo_current.x <= 7) hal_plot_led(TYPEPAD, (puyo_current.x + 1) * 10 + (puyo_current.y + 1), puyo_colors[puyo_pieces[0].bottom][0], puyo_colors[puyo_pieces[0].bottom][1], puyo_colors[puyo_pieces[0].bottom][2]);
-    
+
     s8 top_offset = puyo_top_offset(puyo_current.r, 0);
     if (top_offset < 1 || puyo_current.x != 7) {
         hal_plot_led(TYPEPAD, (puyo_current.x + 1) * 10 + (puyo_current.y + 1) + puyo_top_offset(puyo_current.r, 0), puyo_colors[puyo_pieces[0].top][0], puyo_colors[puyo_pieces[0].top][1], puyo_colors[puyo_pieces[0].top][2]);
@@ -192,7 +192,7 @@ void puyo_draw_ghost() {
             }
             if (++x < 8) hal_plot_led(TYPEPAD, (x + 1) * 10 + (puyo_current.y + 2), puyo_colors[puyo_pieces[0].top][0] >> 3, puyo_colors[puyo_pieces[0].top][1] >> 3, puyo_colors[puyo_pieces[0].top][2] >> 3);
             break;
-        
+
         case 2: // 180 degrees
             for (x = 8; -1 < x; x--) {
                 if (puyo_board[x][puyo_current.y] != puyo_empty) break;
@@ -200,7 +200,7 @@ void puyo_draw_ghost() {
             if (++x < 8) hal_plot_led(TYPEPAD, (x + 1) * 10 + (puyo_current.y + 1), puyo_colors[puyo_pieces[0].top][0] >> 3, puyo_colors[puyo_pieces[0].top][1] >> 3, puyo_colors[puyo_pieces[0].top][2] >> 3);
             if (++x < 8) hal_plot_led(TYPEPAD, (x + 1) * 10 + (puyo_current.y + 1), puyo_colors[puyo_pieces[0].bottom][0] >> 3, puyo_colors[puyo_pieces[0].bottom][1] >> 3, puyo_colors[puyo_pieces[0].bottom][2] >> 3);
             break;
-        
+
         case 3: // 270 degrees
             for (x = 8; -1 < x; x--) {
                 if (puyo_board[x][puyo_current.y] != puyo_empty) break;
@@ -261,7 +261,7 @@ void puyo_move(u8 a) {
                 case 2: // 180 degrees
                     if (puyo_current.y == 0) return;
                     if (puyo_board[puyo_current.x - 1][puyo_current.y - 1] != puyo_empty) return;
-                
+
                 case 3: // 270 degrees
                     if (puyo_current.y == 1) return;
                     if (puyo_board[puyo_current.x][puyo_current.y - 2] != puyo_empty) return;
@@ -269,7 +269,7 @@ void puyo_move(u8 a) {
             }
             puyo_current.y--;
             break;
-        
+
         case 1: // Move right
             switch (puyo_current.r) {
                 case 0: // 0 degrees
@@ -282,7 +282,7 @@ void puyo_move(u8 a) {
                     if (puyo_current.y == 7) return;
                     if (puyo_board[puyo_current.x - 1][puyo_current.y + 1] != puyo_empty) return;
                     break;
-                
+
                 case 1: // 90 degrees
                     if (puyo_current.y == 6) return;
                     if (puyo_board[puyo_current.x][puyo_current.y + 2] != puyo_empty) return;
@@ -295,13 +295,13 @@ void puyo_move(u8 a) {
 
 void puyo_rotate(u8 a) {
     u8 intended;
-    
+
     a &= 1;
     switch (a) {
         case 0: // Rotate CCW
             intended = modulo(puyo_current.r - 1, 4);
             break;
-        
+
         case 1: // Rotate CW
             intended = modulo(puyo_current.r + 1, 4);
             break;
@@ -365,7 +365,7 @@ void puyo_control(u8 p, u8 v) {
 void puyo_down() {
     puyo_current.x--;
     u8 dropped = 0;
-    
+
     switch (puyo_current.r) {
         case 0: // 0 degrees
             dropped = (puyo_board[puyo_current.x][puyo_current.y] != puyo_empty || puyo_current.x < 0);
@@ -408,7 +408,7 @@ void puyo_down() {
 
 u8 puyo_check_fall() {
     u8 ret = 0;
-    
+
     for (u8 x = 0; x < 8; x++) {
         for (u8 y = 0; y < 8; y++) {
             if (puyo_board[x][y] == puyo_empty && puyo_board[x + 1][y] != puyo_empty) {
@@ -462,7 +462,7 @@ u8 puyo_check_chain() {
             if (puyo_board[x][y] != puyo_empty && !puyo_chains[x][y]) {
                 id++;
                 puyo_chains_length[id] = puyo_chain(x, y, puyo_board[x][y], id, 1);
-                chain_exists |= (puyo_chains_length[id] >= puyo_pop); 
+                chain_exists |= (puyo_chains_length[id] >= puyo_pop);
             }
         }
     }
@@ -511,7 +511,7 @@ void puyo_timer_event() {
     switch (puyo_state) {
         case puyo_placing:
             puyo_drop_counter += puyo_drop_increment;
-            
+
             if (puyo_drop_counter >= puyo_drop_timeout) {
                 puyo_drop_counter = 0;
 
@@ -525,7 +525,7 @@ void puyo_timer_event() {
                 puyo_draw_current();
             }
             break;
-        
+
         case puyo_falling:
             if (++puyo_fall_counter > puyo_fall_timeout) {
                 if (!puyo_check_fall()) {
@@ -542,7 +542,7 @@ void puyo_timer_event() {
                 puyo_fall_counter = 0;
             }
             break;
-        
+
         case puyo_chaining:
             if (++puyo_chaining_timer < 1000) {
                 puyo_draw_chains((puyo_chaining_timer / 80) % 2);
@@ -553,7 +553,7 @@ void puyo_timer_event() {
                 puyo_state = puyo_falling;
             }
             break;
-        
+
         case puyo_dead:
             if (++puyo_dead_counter >= puyo_dead_frametime) {
                 puyo_dead_counter = 0;
@@ -594,7 +594,7 @@ void puyo_surface_event(u8 p, u8 v, u8 x, u8 y) {
                 }
                 puyo_control(p, v);
                 break;
-            
+
             case puyo_moveright:
                 if (v) {
                     if (puyo_state == puyo_placing) puyo_move(1);
@@ -606,7 +606,7 @@ void puyo_surface_event(u8 p, u8 v, u8 x, u8 y) {
                 }
                 puyo_control(p, v);
                 break;
-            
+
             case puyo_drop:
                 if (v) {
                     puyo_drop_increment = puyo_drop_fast;
@@ -615,12 +615,12 @@ void puyo_surface_event(u8 p, u8 v, u8 x, u8 y) {
                 }
                 puyo_control(p, v);
                 break;
-            
+
             case puyo_ccw:
                 if (puyo_state == puyo_placing && v) puyo_rotate(0);
                 puyo_control(p, v);
                 break;
-            
+
             case puyo_cw:
                 if (puyo_state == puyo_placing && v) puyo_rotate(1);
                 puyo_control(p, v);
